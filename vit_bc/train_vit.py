@@ -5,7 +5,7 @@ from vit import ViTBC
 from BCDataset import BCDataset
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-dataset = torch.load("../data/sokoban_manual_data.pt", weights_only=False)
+dataset = torch.load("data/sokoban_manual_data.pt", weights_only=False)
 dataloader = data.DataLoader(dataset, batch_size=6, shuffle=True, num_workers=1)
 
 vit = ViTBC(
@@ -18,6 +18,7 @@ vit = ViTBC(
         image_channels=7,
         num_classes=5
     )
+
 vit.to(device)
 optimizer = torch.optim.Adam(vit.parameters(), lr=1e-4)
 criterion = torch.nn.CrossEntropyLoss()
