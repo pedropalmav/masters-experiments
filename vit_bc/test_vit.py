@@ -9,10 +9,10 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072,
+        num_layers=4,
+        num_heads=4,
+        hidden_dim=128,
+        mlp_dim=256,
         image_channels=7,
         num_classes=5
     )

@@ -42,7 +42,7 @@ class ViTBC(VisionTransformer):
         if isinstance(self.heads.head, nn.Linear):
             nn.init.zeros_(self.heads.head.weight)
             nn.init.zeros_(self.heads.head.bias)
-        
+
 if __name__ == '__main__':
     vit = ViTBC(
         image_size=8,

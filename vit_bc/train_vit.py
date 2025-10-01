@@ -6,15 +6,16 @@ from BCDataset import BCDataset
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 dataset = torch.load("data/sokoban_manual_data.pt", weights_only=False)
+print(f"Dataset size: {len(dataset)}")
 dataloader = data.DataLoader(dataset, batch_size=6, shuffle=True, num_workers=1)
 
 vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072,
+        num_layers=4,
+        num_heads=4,
+        hidden_dim=128,
+        mlp_dim=256,
         image_channels=7,
         num_classes=5
     )
@@ -22,7 +23,7 @@ vit = ViTBC(
 vit.to(device)
 optimizer = torch.optim.Adam(vit.parameters(), lr=1e-4)
 criterion = torch.nn.CrossEntropyLoss()
-num_epochs = 10
+num_epochs = 200
 vit.train()
 for epoch in range(num_epochs):
     total_loss = 0.0
