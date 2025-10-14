@@ -41,15 +41,16 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     vit = ViTBC(
-            image_size=8,
-            patch_size=1,
-            num_layers=2,
-            num_heads=2,
-            hidden_dim=64,
-            mlp_dim=128,
-            image_channels=7,
-            num_classes=5
-        )
+        image_size=8,
+        patch_size=1,
+        num_layers=2,
+        num_heads=1,
+        hidden_dim=64,
+        mlp_dim=128,
+        image_channels=7,
+        num_classes=5,
+        dropout=0.1
+    )
     vit.load_state_dict(
         torch.load(os.path.join(os.path.dirname(__file__), "models", "vit_bc.pth"), map_location=device)
     )
