@@ -29,20 +29,20 @@ validation_dataloader = DataLoader(validation_dataset, batch_size=8, shuffle=Fal
 vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=2,
-        num_heads=4,
+        num_layers=3,
+        num_heads=8,
         hidden_dim=64,
         mlp_dim=128,
         image_channels=7,
         num_classes=5,
-        dropout=0.1
+        # dropout=0.1
     )
 
 vit.to(device)
 
-num_epochs = 300
+num_epochs = 150
 optimizer = torch.optim.Adam(vit.parameters(), lr=1e-3) #, weight_decay=1e-3)
-# scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=1e-6)
+# scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=5e-6)
 
 criterion = torch.nn.CrossEntropyLoss()
 best_val_loss = float("inf")
