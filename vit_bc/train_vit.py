@@ -19,7 +19,7 @@ def plot_loss_curve(train_losses, val_losses, save_path):
     plt.savefig(save_path)
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-dataset_path = os.path.join(os.path.dirname(__file__), "data", "10_levels")
+dataset_path = os.path.join(os.path.dirname(__file__), "data", "10000_levels")
 train_dataset = torch.load(os.path.join(dataset_path, "train_trajectories_250m.pt"), weights_only=False)
 validation_dataset = torch.load(os.path.join(dataset_path, "valid_trajectories_250m.pt"), weights_only=False)
 
@@ -40,8 +40,8 @@ vit = ViTBC(
 
 vit.to(device)
 
-num_epochs = 150
-optimizer = torch.optim.Adam(vit.parameters(), lr=1e-3) #, weight_decay=1e-3)
+num_epochs = 25
+optimizer = torch.optim.Adam(vit.parameters(), lr=1e-3) # weight_decay=1e-4)
 # scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=5e-6)
 
 criterion = torch.nn.CrossEntropyLoss()
@@ -68,7 +68,6 @@ for epoch in range(num_epochs):
         optimizer.step()
         total_train_loss += loss.item()
 
-        # Calculate training accuracy
         _, predicted = torch.max(outputs, 1)
         total_train += targets.size(0)
         correct_train += (predicted == targets).sum().item()
@@ -86,7 +85,6 @@ for epoch in range(num_epochs):
             loss = criterion(outputs, targets)
             total_val_loss += loss.item()
 
-            # Calculate validation accuracy
             _, predicted = torch.max(outputs, 1)
             total_val += targets.size(0)
             correct_val += (predicted == targets).sum().item()
