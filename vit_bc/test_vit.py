@@ -44,7 +44,7 @@ if __name__ == "__main__":
         image_size=8,
         patch_size=1,
         num_layers=2,
-        num_heads=1,
+        num_heads=4,
         hidden_dim=64,
         mlp_dim=128,
         image_channels=7,

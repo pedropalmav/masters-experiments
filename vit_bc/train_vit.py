@@ -23,14 +23,14 @@ dataset_path = os.path.join(os.path.dirname(__file__), "data", "10_levels")
 train_dataset = torch.load(os.path.join(dataset_path, "train_trajectories_250m.pt"), weights_only=False)
 validation_dataset = torch.load(os.path.join(dataset_path, "valid_trajectories_250m.pt"), weights_only=False)
 
-train_dataloader = DataLoader(train_dataset, batch_size=32, shuffle=False, num_workers=1)
+train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=False, num_workers=1)
 validation_dataloader = DataLoader(validation_dataset, batch_size=8, shuffle=False, num_workers=1)
 
 vit = ViTBC(
         image_size=8,
         patch_size=1,
         num_layers=2,
-        num_heads=1,
+        num_heads=4,
         hidden_dim=64,
         mlp_dim=128,
         image_channels=7,
