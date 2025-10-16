@@ -6,7 +6,6 @@ fonttools==4.60.1
 fsspec==2025.9.0
 gym==0.22.0
 gym-notices==0.1.0
--e git+ssh://git@github.com/pedropalmav/masters-experiments.git@0377221e1831cdf43bc22b7b2f7120b7117639c4#egg=gym_sokoban&subdirectory=sokoban
 Jinja2==3.1.6
 kiwisolver==1.4.9
 MarkupSafe==3.0.3
