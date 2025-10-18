@@ -29,7 +29,7 @@ validation_dataloader = DataLoader(validation_dataset, batch_size=8, shuffle=Fal
 vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=3,
+        num_layers=4,
         num_heads=8,
         hidden_dim=64,
         mlp_dim=128,
@@ -40,7 +40,7 @@ vit = ViTBC(
 
 vit.to(device)
 
-num_epochs = 25
+num_epochs = 300
 optimizer = torch.optim.Adam(vit.parameters(), lr=1e-3) # weight_decay=1e-4)
 # scheduler = CosineAnnealingLR(optimizer, T_max=num_epochs, eta_min=5e-6)
 
@@ -112,6 +112,6 @@ for epoch in range(num_epochs):
     #     break
 
 
-torch.save(vit.state_dict(), os.path.join(os.path.dirname(__file__), "models", "vit_bc.pth"))
+torch.save(vit.state_dict(), os.path.join(os.path.dirname(__file__), "models", "vit_4_layers.pth"))
 
-plot_loss_curve(train_losses, val_losses, os.path.join(os.path.dirname(__file__), "..", "imgs", "loss_curve.png"))
+plot_loss_curve(train_losses, val_losses, os.path.join(os.path.dirname(__file__), "..", "imgs", "loss_curve_4_layers.png"))
