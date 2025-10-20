@@ -24,7 +24,7 @@ train_dataset = torch.load(os.path.join(dataset_path, "train_trajectories_250m.p
 validation_dataset = torch.load(os.path.join(dataset_path, "valid_trajectories_250m.pt"), weights_only=False)
 
 train_dataloader = DataLoader(train_dataset, batch_size=64, shuffle=False, num_workers=1)
-validation_dataloader = DataLoader(validation_dataset, batch_size=8, shuffle=False, num_workers=1)
+validation_dataloader = DataLoader(validation_dataset, batch_size=64, shuffle=False, num_workers=1)
 
 vit = ViTBC(
         image_size=8,
@@ -46,7 +46,7 @@ optimizer = torch.optim.Adam(vit.parameters(), lr=1e-3) # weight_decay=1e-4)
 
 criterion = torch.nn.CrossEntropyLoss()
 best_val_loss = float("inf")
-patience = 25
+patience = 15
 patience_counter = 0
 
 train_losses = []
@@ -111,7 +111,7 @@ for epoch in range(num_epochs):
     #     print("Early stopping triggered")
     #     break
 
-
-torch.save(vit.state_dict(), os.path.join(os.path.dirname(__file__), "models", "vit_4_layers.pth"))
+if patience_counter < patience:
+    torch.save(vit.state_dict(), os.path.join(os.path.dirname(__file__), "models", "vit_4_layers.pth"))
 
 plot_loss_curve(train_losses, val_losses, os.path.join(os.path.dirname(__file__), "..", "imgs", "loss_curve_4_layers.png"))

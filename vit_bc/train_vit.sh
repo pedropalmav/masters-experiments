@@ -6,9 +6,9 @@
 #SBATCH --nodes=1
 #SBATCH --cpus-per-task=16
 #SBATCH --mem-per-cpu=2G
-#SBATCH --time=12:00:00
+#SBATCH --time=24:00:00
 #SBATCH --partition=ialab
-#SBATCH --nodelist=ventress
+#SBATCH --nodelist=ventress,llaima
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=pedro.palma@uc.cl
 #SBATCH --chdir=/home/pedropalmav/archive/masters-experiments/vit_bc
@@ -22,5 +22,5 @@ eval "$(pyenv init -)"
 
 # Run the training script
 pyenv activate env
-python train_vit.py
+python train_vit.py 
 pyenv deactivate
