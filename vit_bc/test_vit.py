@@ -43,7 +43,7 @@ if __name__ == "__main__":
     vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=3,
+        num_layers=4,
         num_heads=8,
         hidden_dim=64,
         mlp_dim=128,
@@ -52,7 +52,7 @@ if __name__ == "__main__":
         # dropout=0.1
     )
     vit.load_state_dict(
-        torch.load(os.path.join(os.path.dirname(__file__), "models", "vit_bc.pth"), map_location=device)
+        torch.load(os.path.join(os.path.dirname(__file__), "models", "vit_4_layers.pth"), map_location=device)
     )
     vit.to(device)
     vit.eval()
