@@ -4,6 +4,7 @@ import numpy as np
 import gym_sokoban
 import torch
 import os
+from tqdm import tqdm
 import utils.observation_parser as observation_parser
 from utils.sokoban_visualizer import SokobanVisualizer
 from vit import ViTBC
@@ -43,7 +44,7 @@ if __name__ == "__main__":
     vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=4,
+        num_layers=5,
         num_heads=8,
         hidden_dim=64,
         mlp_dim=128,
@@ -52,20 +53,29 @@ if __name__ == "__main__":
         # dropout=0.1
     )
     vit.load_state_dict(
-        torch.load(os.path.join(os.path.dirname(__file__), "models", "vit_4_layers.pth"), map_location=device)
+        torch.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "models",
+                "100000_levels",
+                "vit_5_layers_0.003.pth"
+            ),
+            map_location=device
+        )
     )
     vit.to(device)
     vit.eval()
 
     middle = {
         '': '-',
+        'train': '-',
         'valid': '-valid-',
         'test': '-test-'
     }
     env = gym.make(f"Sokoban{middle[args.env_split]}v0")
 
     total_success = 0
-    for level in range(args.num_levels):
+    for level in tqdm(range(args.num_levels), desc="Testing levels"):
         total_success += test_level(env, level, args.render)
     
     print(f"Success rate: {total_success / args.num_levels:.2%}")
