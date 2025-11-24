@@ -35,7 +35,6 @@ def success(obs: np.ndarray) -> int:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--num_levels", type=int, help="Number of levels to test")
     parser.add_argument("--render", default=False, help="Render the environment")
     parser.add_argument("--env_split", type=str, default="", help="Environment split")
     args = parser.parse_args()
@@ -44,7 +43,7 @@ if __name__ == "__main__":
     vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=5,
+        num_layers=10,
         num_heads=8,
         hidden_dim=64,
         mlp_dim=128,
@@ -57,8 +56,8 @@ if __name__ == "__main__":
             os.path.join(
                 os.path.dirname(__file__),
                 "models",
-                "100000_levels",
-                "vit_5_layers_0.003.pth"
+                "full",
+                "vit_2439.pth"
             ),
             map_location=device
         )
@@ -74,8 +73,15 @@ if __name__ == "__main__":
     }
     env = gym.make(f"Sokoban{middle[args.env_split]}v0")
 
+    levels_per_split = {
+        '': 900_000,
+        'train': 900_000,
+        'test': 1_000,
+    }
+
+    levels = levels_per_split[args.env_split]
     total_success = 0
-    for level in tqdm(range(args.num_levels), desc="Testing levels"):
+    for level in tqdm(range(levels), desc="Testing levels"):
         total_success += test_level(env, level, args.render)
-    
-    print(f"Success rate: {total_success / args.num_levels:.2%}")
+
+    print(f"Success rate: {total_success / levels:.2%}")

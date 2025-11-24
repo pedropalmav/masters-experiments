@@ -4,11 +4,11 @@
 #SBATCH --error=%x_%j.err
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
-#SBATCH --mem-per-cpu=2G
-#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=8
+#SBATCH --mem-per-cpu=8G
+#SBATCH --gpus=1
 #SBATCH --partition=ialab
-#SBATCH --nodelist=ventress,llaima
+#SBATCH --nodelist=llaima,hydra
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=pedro.palma@uc.cl
 #SBATCH --chdir=/home/pedropalmav/archive/masters-experiments/vit_bc
@@ -20,7 +20,16 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
 
+
+# Diagnostic information
+echo "----------------------------------------"
+echo "Job ID: $SLURM_JOB_ID, Task ID: $SLURM_ARRAY_TASK_ID"
+echo "Running on node: $(hostname)"
+echo "Checking GPU state before starting Python:"
+nvidia-smi
+echo "----------------------------------------"
+
 # Run the training script
 pyenv activate env
-python train_vit.py 
+python train_vit.py --epochs 300 --num_layers 10 --batch_size 4096 --lr 0.002 --filename $SLURM_JOB_ID --early_stopping
 pyenv deactivate
