@@ -31,5 +31,5 @@ echo "----------------------------------------"
 
 # Run the training script
 pyenv activate env
-python train_vit.py --epochs 300 --num_layers 10 --batch_size 4096 --lr 0.002 --filename $SLURM_JOB_ID --early_stopping
+python train_vit.py --epochs 300 --num_layers 7 --batch_size 4096 --lr 0.002 --filename $SLURM_JOB_ID --hidden_dim 128 --early_stopping
 pyenv deactivate

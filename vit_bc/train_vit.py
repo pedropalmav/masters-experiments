@@ -24,7 +24,7 @@ def plot_loss_curve(train_losses, val_losses, save_path):
 
 parser = argparse.ArgumentParser(description="Train ViT for Behavior Cloning")
 parser.add_argument("--epochs", type=int, help="Number of training epochs")
-parser.add_argument("--num_layers", type=int, default=4, help="Number of transformer layers")
+parser.add_argument("--num_layers", type=int, default=6, help="Number of transformer layers")
 parser.add_argument("--num_heads", type=int, default=8, help="Number of attention heads")
 parser.add_argument("--batch_size", type=int, default=64, help="Batch size for training")
 parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
@@ -33,6 +33,7 @@ parser.add_argument("--start_factor", type=float, default=1e-3, help="Starting l
 parser.add_argument("--early_stopping", action="store_true", help="Enable early stopping")
 parser.add_argument("--filename", type=str, help="Filename to save the model and results")
 parser.add_argument("--dropout", type=float, default=0.0, help="Dropout rate")
+parser.add_argument("--hidden_dim", type=int, default=64, help="Hidden dimension size")
 args = parser.parse_args()
 
 filename = f"vit_{args.filename}"
@@ -66,8 +67,8 @@ vit = ViTBC(
         patch_size=1,
         num_layers=args.num_layers,
         num_heads=args.num_heads,
-        hidden_dim=64,
-        mlp_dim=128,
+        hidden_dim=args.hidden_dim,
+        mlp_dim=args.hidden_dim * 4,
         image_channels=7,
         num_classes=5,
         dropout=args.dropout

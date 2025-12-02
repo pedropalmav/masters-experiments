@@ -20,11 +20,11 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
-
-LAYERS=(4 5)
+  
+LAYERS=(6 7)
 NUM_LAYERS=${LAYERS[$SLURM_ARRAY_TASK_ID / 2]}
-LEARNING_RATES=(0.002 0.001)
-NUM_LR=${LEARNING_RATES[$SLURM_ARRAY_TASK_ID % 2]}
+HIDDEN_DIMS=(128 256)
+NUM_HIDDEN_DIM=${HIDDEN_DIMS[$SLURM_ARRAY_TASK_ID % 2]}
 
 # Diagnostic information
 echo "----------------------------------------"
@@ -37,5 +37,5 @@ echo "----------------------------------------"
 # Run the training script
 pyenv activate env
 echo "Running training for $NUM_LAYERS layers..."
-python train_vit.py --epochs 200 --num_layers $NUM_LAYERS  --batch_size 4096 --lr $NUM_LR
+python train_vit.py --epochs 300 --num_layers $NUM_LAYERS  --batch_size 4096 --lr 0.002 --hidden_dim $NUM_HIDDEN_DIM
 pyenv deactivate
