@@ -43,10 +43,10 @@ if __name__ == "__main__":
     vit = ViTBC(
         image_size=8,
         patch_size=1,
-        num_layers=10,
+        num_layers=7,
         num_heads=8,
-        hidden_dim=64,
-        mlp_dim=128,
+        hidden_dim=128,
+        mlp_dim=128*4,
         image_channels=7,
         num_classes=5,
         # dropout=0.1
@@ -57,7 +57,7 @@ if __name__ == "__main__":
                 os.path.dirname(__file__),
                 "models",
                 "full",
-                "vit_2439.pth"
+                "vit_3091.pth"
             ),
             map_location=device
         )
