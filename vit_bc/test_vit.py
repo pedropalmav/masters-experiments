@@ -9,6 +9,7 @@ import utils.observation_parser as observation_parser
 from utils.sokoban_visualizer import SokobanVisualizer
 from vit import ViTBC
 
+
 def test_level(env: gym.Env, room_id: int, render: bool = True):
     obs = env.reset(room_id=room_id)
 
@@ -18,7 +19,12 @@ def test_level(env: gym.Env, room_id: int, render: bool = True):
 
     with torch.no_grad():
         while True:
-            obs_tensor = torch.tensor(obs, dtype=torch.float32).unsqueeze(0).permute(0, 3, 1, 2).to(device)
+            obs_tensor = (
+                torch.tensor(obs, dtype=torch.float32)
+                .unsqueeze(0)
+                .permute(0, 3, 1, 2)
+                .to(device)
+            )
             action = vit(obs_tensor).argmax(dim=1).item()
             obs, reward, done, _ = env.step(action)
 
@@ -27,11 +33,13 @@ def test_level(env: gym.Env, room_id: int, render: bool = True):
 
             if done:
                 break
-        
+
     return success(obs)
+
 
 def success(obs: np.ndarray) -> int:
     return int(not np.any(obs[:, :, 2]))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -40,43 +48,34 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    hidden_dim = 256
     vit = ViTBC(
         image_size=8,
         patch_size=1,
         num_layers=7,
         num_heads=8,
-        hidden_dim=128,
-        mlp_dim=128*4,
+        hidden_dim=hidden_dim,
+        mlp_dim=hidden_dim * 4,
         image_channels=7,
         num_classes=5,
         # dropout=0.1
     )
     vit.load_state_dict(
         torch.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "models",
-                "full",
-                "vit_3091.pth"
-            ),
-            map_location=device
+            os.path.join(os.path.dirname(__file__), "models", "full", "vit_6046.pth"),
+            map_location=device,
         )
     )
     vit.to(device)
     vit.eval()
 
-    middle = {
-        '': '-',
-        'train': '-',
-        'valid': '-valid-',
-        'test': '-test-'
-    }
+    middle = {"": "-", "train": "-", "valid": "-valid-", "test": "-test-"}
     env = gym.make(f"Sokoban{middle[args.env_split]}v0")
 
     levels_per_split = {
-        '': 900_000,
-        'train': 900_000,
-        'test': 1_000,
+        "": 900_000,
+        "train": 900_000,
+        "test": 1_000,
     }
 
     levels = levels_per_split[args.env_split]

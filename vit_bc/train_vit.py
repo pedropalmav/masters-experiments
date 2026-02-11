@@ -26,7 +26,7 @@ parser = argparse.ArgumentParser(description="Train ViT for Behavior Cloning")
 parser.add_argument("--epochs", type=int, help="Number of training epochs")
 parser.add_argument("--num_layers", type=int, default=6, help="Number of transformer layers")
 parser.add_argument("--num_heads", type=int, default=8, help="Number of attention heads")
-parser.add_argument("--batch_size", type=int, default=64, help="Batch size for training")
+parser.add_argument("--batch_size", type=int, default=4096, help="Batch size for training")
 parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
 parser.add_argument("--warmup_epochs", type=int, default=10, help="Number of warm-up epochs")
 parser.add_argument("--start_factor", type=float, default=1e-3, help="Starting learning rate for warm-up")
@@ -34,6 +34,7 @@ parser.add_argument("--early_stopping", action="store_true", help="Enable early 
 parser.add_argument("--filename", type=str, help="Filename to save the model and results")
 parser.add_argument("--dropout", type=float, default=0.0, help="Dropout rate")
 parser.add_argument("--hidden_dim", type=int, default=64, help="Hidden dimension size")
+parser.add_argument("--optimizer", type=str, default="adam", help="Optimizer to use (adam or adamw)")
 args = parser.parse_args()
 
 filename = f"vit_{args.filename}"
@@ -77,7 +78,12 @@ vit = ViTBC(
 vit.to(device)
 
 num_epochs = args.epochs
-optimizer = torch.optim.Adam(vit.parameters(), lr=args.lr)
+
+if args.optimizer.lower() == "adamw":
+    optimizer = torch.optim.AdamW(vit.parameters(), lr=args.lr, weight_decay=5e-2)
+else:
+    optimizer = torch.optim.Adam(vit.parameters(), lr=args.lr)
+
 if args.warmup_epochs > 0:
     decay_epochs = num_epochs - args.warmup_epochs
     warmup = LinearLR(optimizer, start_factor=args.start_factor, end_factor=1.0, total_iters=args.warmup_epochs)

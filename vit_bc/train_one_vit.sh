@@ -8,7 +8,7 @@
 #SBATCH --mem-per-cpu=8G
 #SBATCH --gpus=1
 #SBATCH --partition=ialab
-#SBATCH --nodelist=llaima,hydra
+#SBATCH --nodelist=llaima
 #SBATCH --mail-type=END,FAIL
 #SBATCH --mail-user=pedro.palma@uc.cl
 #SBATCH --chdir=/home/pedropalmav/archive/masters-experiments/vit_bc
@@ -31,5 +31,13 @@ echo "----------------------------------------"
 
 # Run the training script
 pyenv activate env
-python train_vit.py --epochs 300 --num_layers 7 --batch_size 4096 --lr 0.002 --filename $SLURM_JOB_ID --hidden_dim 128 --early_stopping
+python train_vit.py --epochs 300 --num_layers 7 --batch_size 4096 --lr 0.002 --filename $SLURM_JOB_ID --hidden_dim 256 --dropout 0.5 --early_stopping
 pyenv deactivate
+
+duration=$SECONDS
+days=$((duration / 86400))
+hours=$(((duration % 86400) / 3600))
+minutes=$(((duration % 3600) / 60))
+seconds=$((duration % 60))
+
+echo "Tiempo total de ejecución: ${days}d ${hours}h ${minutes}m ${seconds}s"

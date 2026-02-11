@@ -4,7 +4,7 @@
 #SBATCH --error=%x_%j.err
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=2G
 #SBATCH --gpus=1
 #SBATCH --partition=ialab
@@ -23,5 +23,5 @@ eval "$(pyenv init -)"
 # 100.000 levels for train, 100 levels for test
 # Run the training script
 pyenv activate env
-python test_vit.py --env_split test
+python test_vit.py --env_split train
 pyenv deactivate
